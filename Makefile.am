@@ -1,25 +1,17 @@
+#  $Id: Makefile.am,v 1.1 2008/10/04 22:04:14 strauman Exp $
 AUTOMAKE_OPTIONS=foreign
 
-ACLOCAL_AMFLAGS= -I./m4
+include $(top_srcdir)/rtems-pre.am
 
-# make sure any third-party makefile
-# inherits these settings which
-# may be embedded in installation paths...
-# (This is some hack)
-export rtems_bsp
-export RTEMS_BSP
-export enable_rtemsbsp
-export package_subdir
+C_PIECES_powerpc=memProbe.c dabrBpnt.c
 
-SUBDIRS=. @enable_subdirs@
+libbspExt_a_SOURCES=bspExt.c isrWrap.c
+EXTRA_libbspExt_a_SOURCES = $(C_PIECES_powerpc)
+libbspExt_a_LIBADD       =$(C_PIECES_@rtems_cpu@:%.c=%.$(OBJEXT))
+libbspExt_a_DEPENDENCIES =$(C_PIECES_@rtems_cpu@:%.c=%.$(OBJEXT))
 
-DIST_SUBDIRS= @all_subdirs@
+lib_LIBRARIES=libbspExt.a
 
-EXTRA_DIST=makefile.top.am makefile.top.in ssrlApps.components.in
+include_bsp_HEADERS=bspExt.h
 
-all-local:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL="$(INSTALL_IF_CHANGE)" prefix="$(abs_top_builddir)/data" exec_prefix='$$(prefix)' includedir='$$(prefix)/include' install-data
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL="$(INSTALL_IF_CHANGE)" prefix="$(abs_top_builddir)/data" exec_prefix='$$(prefix)' includedir='$$(prefix)/include' install-exec
-
-clean-local:
-	$(RM) -r data
+include $(top_srcdir)/rtems.am
