@@ -33,7 +33,7 @@ OBJS=$(C_O_FILES) $(CC_O_FILES) $(S_O_FILES)
 include $(RTEMS_MAKEFILE_PATH)/Makefile.inc
 
 include $(RTEMS_CUSTOM)
-include $(RTEMS_ROOT)/make/lib.cfg
+include $(RTEMS_ROOT)/make/leaf.cfg
 
 ifneq ($(filter $(RTEMS_CPU),i386 powerpc)xx,xx)
 # this CPU is supported
